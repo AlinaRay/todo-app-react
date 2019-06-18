@@ -55,8 +55,8 @@ export default class App extends React.Component {
             elements.forEach(el => {
                 el.done = this.flag;
             });
-            console.log(this.flag);
             this.flag = !this.flag;
+            // console.log("check all");
             return {
                 todoData: elements,
             };
@@ -83,6 +83,9 @@ export default class App extends React.Component {
             }
         });
     };
+    showActive = () => {
+        return this.state.todoData.filter(el => !el.done).length;
+    };
     filter = (items, filter) => {
         switch (filter) {
             case 'active':
@@ -99,6 +102,7 @@ export default class App extends React.Component {
     };
 
     render() {
+        // console.log("app render");
         const {filter} = this.state;
         const visibleItems = this.filter(this.state.todoData, filter);
         return (
@@ -112,7 +116,7 @@ export default class App extends React.Component {
                 <Footer filter={filter}
                         onFilterChange={this.onFilterChange}
                         deleteAll={this.deleteAll}
-                        size={this.state.todoData.length}/>
+                        size={this.showActive()}/>
             </div>
         );
     }

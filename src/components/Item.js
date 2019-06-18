@@ -9,7 +9,7 @@ export default class Item extends React.Component{
                         className="toggle"
                         type="checkbox"
                         onChange={() => this.props.onChecked(this.props.id)}
-                        defaultChecked={this.props.done}
+                        checked={this.props.done}
                     />
                     <label>{this.props.text}</label>
                     <button
