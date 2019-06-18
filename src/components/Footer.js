@@ -9,6 +9,18 @@ export default class Footer extends React.Component {
     render() {
         const {onFilterChange} = this.props;
         let index = 0;
+        let done = this.props.done;
+        let clearCompleted;
+        if(done){
+             clearCompleted = (
+                <button
+                    className="clear-completed"
+                    onClick={() => this.props.deleteAll()}>
+                    Clear completed
+                </button>)
+        } else {
+            clearCompleted = null;
+        }
         const buttons = this.buttons.map(({name, label}) => {
             return (
                 <li key={++index}>
@@ -31,11 +43,7 @@ export default class Footer extends React.Component {
                 <ul className="filters">
                     {buttons}
                 </ul>
-                <button
-                    className="clear-completed"
-                    onClick={() => this.props.deleteAll()}>
-                    Clear completed
-                </button>
+                {clearCompleted}
             </footer>
         )
     }

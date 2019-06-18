@@ -28,7 +28,6 @@ export default class App extends React.Component {
             return;
         }
         this.setState(({todoData}) => {
-                console.log(todoData);
                 let arrTodoData = [...todoData, this.createTodoItem(newTodo)];
                 return {todoData: arrTodoData}
             }
@@ -56,7 +55,6 @@ export default class App extends React.Component {
                 el.done = this.flag;
             });
             this.flag = !this.flag;
-            // console.log("check all");
             return {
                 todoData: elements,
             };
@@ -71,7 +69,6 @@ export default class App extends React.Component {
         });
     };
     deleteItem = (id) => {
-        console.log("APP on delete {}", id);
         this.setState(({todoData}) => {
             const index = this.findElement(todoData, id);
             const newArr = [
@@ -100,9 +97,10 @@ export default class App extends React.Component {
     onFilterChange = (filter) => {
         this.setState({filter});
     };
-
+    showDone = () => {
+        return this.state.todoData.some(el => el.done);
+    };
     render() {
-        // console.log("app render");
         const {filter} = this.state;
         const visibleItems = this.filter(this.state.todoData, filter);
         return (
@@ -116,6 +114,7 @@ export default class App extends React.Component {
                 <Footer filter={filter}
                         onFilterChange={this.onFilterChange}
                         deleteAll={this.deleteAll}
+                        done={this.showDone()}
                         size={this.showActive()}/>
             </div>
         );
