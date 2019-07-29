@@ -9,6 +9,7 @@ export default class Main extends React.Component {
                          done = {item.done}
                          id = {item.id}
                          text = {item.text}
+                         editTodoItem={this.props.editTodoItem}
                          deleteItem = {this.props.onDeleted}
                          onChecked = {this.props.onChecked}/>
         });

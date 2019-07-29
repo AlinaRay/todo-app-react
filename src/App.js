@@ -4,34 +4,29 @@ import Main from './components/Main';
 import Footer from './components/Footer';
 
 export default class App extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             todoData: [],
-            filter: 'all'
+            filter: 'all',
+            flag: false,
+            counter: 1
         };
-
     }
-    flag = true;
-    counter = 1;
-
-    createTodoItem(text) {
+    createTodoItem = (text) => {
         return {
             text,
             done: false,
-            id: this.counter++
+            id: Date.now()
         }
-    }
-
+    };
     addItem = (newTodo) => {
         if (newTodo === '') {
             return;
         }
-        this.setState(({todoData}) => {
-                let arrTodoData = [...todoData, this.createTodoItem(newTodo)];
-                return {todoData: arrTodoData}
-            }
-        )
+        this.setState((prevState) => ({
+            todoData: [...prevState.todoData, this.createTodoItem(newTodo)]
+        }));
     };
     findElement = (todoData, id) => {
         return todoData.findIndex((el) => el.id === id);
@@ -41,22 +36,24 @@ export default class App extends React.Component {
         this.setState(({todoData}) => {
             const copy = [...todoData];
             const index = this.findElement(copy, id);
-            let obj = copy[index];
-            obj.done = !obj.done;
+            copy[index] = {
+                ...copy[index],
+                done: !copy[index].done
+            };
             return {
                 todoData: copy
             }
         })
     };
     checkAll = () => {
-        this.setState(({todoData}) => {
-            const elements = [...todoData];
+        this.setState((prevState) => {
+            const elements = [...prevState.todoData];
             elements.forEach(el => {
-                el.done = this.flag;
+                el.done = !prevState.flag;
             });
-            this.flag = !this.flag;
             return {
                 todoData: elements,
+                flag: !prevState.flag
             };
         })
     };
@@ -69,40 +66,42 @@ export default class App extends React.Component {
         });
     };
     deleteItem = (id) => {
-        this.setState(({todoData}) => {
-            const index = this.findElement(todoData, id);
-            const newArr = [
-                ...todoData.slice(0, index),
-                ...todoData.slice(index + 1)
-            ];
-            return {
-                todoData: newArr
-            }
-        });
+        const newItems = this.state.todoData.filter((item) => item.id !== id);
+        this.setState({ todoData: newItems })
     };
-    showActive = () => {
+    getActiveCount = () => {
         return this.state.todoData.filter(el => !el.done).length;
     };
-    filter = (items, filter) => {
-        switch (filter) {
+    filterBy = (filterBy) => {
+        switch (filterBy) {
             case 'active':
-                return items.filter(item => !item.done);
+                return this.state.todoData.filter(item => !item.done);
             case 'done':
-                return items.filter(item => item.done);
+                return this.state.todoData.filter(item => item.done);
             default:
-                return items;
+                return this.state.todoData;
         }
     };
-
     onFilterChange = (filter) => {
         this.setState({filter});
     };
     showDone = () => {
         return this.state.todoData.some(el => el.done);
     };
+    editTodoItem = (id, text) => {
+        this.setState(prevState => {
+            return {
+                todoData: prevState.todoData.map(todo => {
+                    return todo.id !== id
+                    ? todo
+                    : {...todo, text};
+                })
+            }
+        })
+    };
     render() {
         const {filter} = this.state;
-        const visibleItems = this.filter(this.state.todoData, filter);
+        const visibleItems = this.filterBy(filter);
         return (
             <div className="todoapp">
                 <Header addItem={(text) => this.addItem(text)}/>
@@ -110,12 +109,13 @@ export default class App extends React.Component {
                       onDeleted={(id) => this.deleteItem(id)}
                       onChecked={(id) => this.onChecked(id)}
                       checkAll={this.checkAll}
+                      editTodoItem={this.editTodoItem}
                 />
                 <Footer filter={filter}
                         onFilterChange={this.onFilterChange}
                         deleteAll={this.deleteAll}
                         done={this.showDone()}
-                        size={this.showActive()}/>
+                        size={this.getActiveCount()}/>
             </div>
         );
     }

@@ -2,36 +2,43 @@ import React from 'react';
 
 export default class Footer extends React.Component {
     buttons = [
-        {name: 'all', label: 'All'},
-        {name: 'active', label: 'Active'},
-        {name: 'done', label: 'Done'}
+        {id: 0, name: 'all', label: 'All'},
+        {id: 1, name: 'active', label: 'Active'},
+        {id: 2, name: 'done', label: 'Done'}
     ];
+    renderClearCompleted = () => {
+        return (
+            <button
+                className="clear-completed"
+                onClick={() => this.props.deleteAll()}>
+                Clear completed
+            </button>
+        )
+    };
+    renderButtons = () => {
+        return (
+            this.buttons.map(({id, name, label}) => {
+                return (
+                    <li key={id}>
+                        <a
+                            href={`#/${name}`}
+                            key={name}
+                            onClick={() => this.props.onFilterChange(name)}>{label}
+                        </a>
+                    </li>
+                );
+            })
+        )
+    };
     render() {
-        const {onFilterChange} = this.props;
-        let index = 0;
-        let done = this.props.done;
+        const {done} = this.props;
         let clearCompleted;
-        if(done){
-             clearCompleted = (
-                <button
-                    className="clear-completed"
-                    onClick={() => this.props.deleteAll()}>
-                    Clear completed
-                </button>)
+        if (done) {
+            clearCompleted = this.renderClearCompleted();
         } else {
             clearCompleted = null;
         }
-        const buttons = this.buttons.map(({name, label}) => {
-            return (
-                <li key={++index}>
-                    <a
-                        href={`#/${name}`}
-                        key={name}
-                        onClick={() => onFilterChange(name)}>{label}
-                    </a>
-                </li>
-            );
-        });
+        const buttons = this.renderButtons();
         return (
             <footer className="footer">
             <span className="todo-count">

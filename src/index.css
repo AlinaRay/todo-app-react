@@ -520,3 +520,7 @@ html .clear-completed:active {
 .test{
     width: 100px;
 }
+
+.edit-mode {
+    border: 1px solid darkgray;
+}
