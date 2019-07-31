@@ -6,18 +6,12 @@ export default class Item extends React.Component {
         currentText: this.props.text
     };
     editText = (id, text) => {
-        this.setState(() => {
-            return {
-                currentText: text
-            }
-        })
+        this.setState({ currentText: text })
     };
     toggleEditMode = () => {
-        this.setState(prevState => {
-            return {
-                isEdited: !prevState.isEdited
-            }
-        })
+        this.setState(prevState => ({
+            isEdited: !prevState.isEdited
+        }))
     };
     onSubmit = (e) => {
         e.preventDefault();
@@ -49,7 +43,9 @@ export default class Item extends React.Component {
                                 onChange={() => onChecked(id)}
                                 checked={done}
                             />
-                            <label onClick={() => this.toggleEditMode()}>
+                            <label
+                                onClick={this.toggleEditMode}
+                            >
                                 {text}
                             </label>
                             <button

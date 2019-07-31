@@ -15,40 +15,33 @@ export default class Footer extends React.Component {
             </button>
         )
     };
-    renderButtons = () => {
-        return (
-            this.buttons.map(({id, name, label}) => {
-                return (
-                    <li key={id}>
-                        <a
-                            href={`#/${name}`}
-                            key={name}
-                            onClick={() => this.props.onFilterChange(name)}>{label}
-                        </a>
-                    </li>
-                );
-            })
-        )
-    };
     render() {
-        const {done} = this.props;
+        const {done, size, onFilterChange} = this.props;
         let clearCompleted;
         if (done) {
             clearCompleted = this.renderClearCompleted();
         } else {
             clearCompleted = null;
         }
-        const buttons = this.renderButtons();
         return (
             <footer className="footer">
             <span className="todo-count">
-                <strong>{this.props.size}</strong>
+                <strong>{size()}</strong>
                 <span>&nbsp;</span>
                 <span>items&nbsp;</span>
                 <span>left</span>
             </span>
                 <ul className="filters">
-                    {buttons}
+                    {this.buttons.map(({id, name, label}) => {
+                        return (
+                            <li key={id}>
+                                <a
+                                    href={`#/${name}`}
+                                    onClick={() => onFilterChange(name)}>{label}
+                                </a>
+                            </li>
+                        );
+                    })}
                 </ul>
                 {clearCompleted}
             </footer>

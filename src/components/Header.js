@@ -23,10 +23,10 @@ export default class Header extends React.Component{
         return (
             <header className="header">
                 <h1>Todo app</h1>
-                <form onSubmit={(e)=> this.onSubmit(e)}>
+                <form onSubmit={this.onSubmit}>
                     <input
                         className="new-todo"
-                        onChange={ this.onChange}
+                        onChange={this.onChange}
                         value={this.state.text}
                         type="text"
                         placeholder="What needs to be done?"/>
