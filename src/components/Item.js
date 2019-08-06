@@ -3,7 +3,7 @@ import React from 'react';
 export default class Item extends React.Component {
     state = {
         isEdited: false,
-        currentText: this.props.text
+        currentText: this.props.item.text
     };
     editText = (id, text) => {
         this.setState({ currentText: text })
@@ -13,20 +13,20 @@ export default class Item extends React.Component {
             isEdited: !prevState.isEdited
         }))
     };
-    onSubmit = (e) => {
+    onSubmit = (id, e) => {
         e.preventDefault();
-        this.props.editTodoItem(this.props.id, this.state.currentText);
+        this.props.editTodoItem(id, this.state.currentText);
         this.toggleEditMode();
     };
 
     render() {
-        const {onChecked, deleteItem, id, done, text} = this.props;
+        const {onChecked, deleteItem, item: {id, done, text}} = this.props;
         return (
-            <li key={id}>
+            <li>
                 {
                     this.state.isEdited ? (
                         <div className="view">
-                            <form onSubmit={(e) => this.onSubmit(e)}>
+                            <form onSubmit={(e) => this.onSubmit(id,  e)}>
                                 <input
                                     className="new-todo edit-mode"
                                     type="text"

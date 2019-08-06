@@ -17,12 +17,7 @@ export default class Footer extends React.Component {
     };
     render() {
         const {done, size, onFilterChange} = this.props;
-        let clearCompleted;
-        if (done) {
-            clearCompleted = this.renderClearCompleted();
-        } else {
-            clearCompleted = null;
-        }
+
         return (
             <footer className="footer">
             <span className="todo-count">
@@ -43,7 +38,17 @@ export default class Footer extends React.Component {
                         );
                     })}
                 </ul>
-                {clearCompleted}
+                { done() ?
+                    (
+                        <button
+                            className="clear-completed"
+                            onClick={() => this.props.deleteAll()}>
+                            Clear completed
+                        </button>
+                    ) : (
+                        ' '
+                    )
+                }
             </footer>
         )
     }

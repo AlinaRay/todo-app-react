@@ -20,12 +20,12 @@ export default class App extends React.Component {
             id: Date.now()
         }
     };
-    addItem = (newTodo) => {
-        if (newTodo === '') {
+    addItem = (text) => {
+        if (text === '') {
             return;
         }
         this.setState((prevState) => ({
-            todoData: [...prevState.todoData, this.createTodoItem(newTodo)]
+            todoData: [...prevState.todoData, this.createTodoItem(text)]
         }));
     };
 
@@ -57,9 +57,7 @@ export default class App extends React.Component {
     getActiveCount = () => {
         return this.state.todoData.filter(el => !el.done).length;
     };
-    onFilterChange = (filter) => {
-        this.setState({filter});
-    };
+    onFilterChange = (filter) => this.setState({filter});
     showDone = () => {
         return this.state.todoData.some(el => el.done);
     };
@@ -79,7 +77,7 @@ export default class App extends React.Component {
         return (
             <div className="todoapp">
                 <Header addItem={(text) => this.addItem(text)}/>
-                <CachedVisibleItems items={todoData}
+                <Main items={todoData}
                       filter={filter}
                       onDeleted={this.deleteItem}
                       onChecked ={this.onChecked}
@@ -95,4 +93,3 @@ export default class App extends React.Component {
         );
     }
 }
-const CachedVisibleItems = React.memo(Main);

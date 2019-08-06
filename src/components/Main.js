@@ -1,7 +1,8 @@
 import React from 'react';
 import Item from './Item';
+import cashedFilteredTodos from '../helpers/helperFilteredTodos';
 
-const filterBy = (data, filter) => {
+const getFilteredTodos = (data, filter) => {
     switch (filter) {
         case 'active':
             return data.filter(item => !item.done);
@@ -12,29 +13,31 @@ const filterBy = (data, filter) => {
     }
 };
 
+const getCashedFilteredTodos = cashedFilteredTodos(getFilteredTodos);
+
 export default class Main extends React.Component {
     render() {
-        const visibleItems= filterBy(this.props.items, this.props.filter);
-        const elements = visibleItems.map((item) => {
-            return <Item key={item.id}
-                         done = {item.done}
-                         id = {item.id}
-                         text = {item.text}
-                         editTodoItem={this.props.editTodoItem}
-                         deleteItem = {this.props.onDeleted}
-                         onChecked = {this.props.onChecked}/>
-        });
+        const {items, filter, editTodoItem, onDeleted, onChecked, checkAll} = this.props;
+        const visibleItems = getCashedFilteredTodos([...items], filter);
         return (
             <main className="main">
                 <input
                     id="toggle-all"
                     className="toggle-all"
                     type="checkbox"
-                    onClick={this.props.checkAll}
+                    onClick={checkAll}
                 />
                 <label htmlFor="toggle-all"></label>
                 <ul className="todo-list">
-                    {elements}
+                    {
+                        visibleItems.map((item) => {
+                            return <Item key={item.id}
+                                         item={item}
+                                         editTodoItem={editTodoItem}
+                                         deleteItem = {onDeleted}
+                                         onChecked = {onChecked}/>
+                        })
+                    }
                 </ul>
             </main>
         )
